@@ -1,0 +1,25 @@
+body {
+  background-color: #dadada;
+}
+body > .grid {
+  height: 100%;
+}
+.wrapper{
+  padding-top: 70px; 
+}
+.image {
+  margin-top: -100px;
+}
+.column {
+  margin: auto;
+  max-width: 450px;
+}
+
+.groupper {
+  margin: auto;
+  max-width: 600px;
+}
+
+.swal-footer {
+  text-align: center !important;
+}
