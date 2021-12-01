@@ -14,5 +14,10 @@ class JWTClass {
     const validation = await hash.Compare(user_password, hash_password);
     return validation;
   }
+
+  decode(user) {
+    const decoded = jwt.decode(user);
+    return decoded;
+  }
 }
 module.exports = new JWTClass();

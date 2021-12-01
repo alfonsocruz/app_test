@@ -6,14 +6,14 @@ class UserMySql {
   async findOne(param) {
     let parameters = [];
     let query = "";
-    if(param.email){
+    if (param.email) {
       query = queries.findByEmail;
-      parameters.push(param.email)
-    }else if(param.id){
-      query = queries.findByEmail;
-      parameters.push(param.id)
+      parameters.push(param.email);
+    } else if (param.id) {
+      query = queries.findByID;
+      parameters.push(param.id);
     }
-    
+
     let res = await mysqlcon.getConnectionWithData(query, parameters);
     return formatQueryResponse(res, "FIRST", "mysql");
   }

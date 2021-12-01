@@ -1,1 +1,23 @@
-<header>Header</header>
+<div class="ui attached stackable menu">
+    <div class="ui container">
+        <a class="item">
+            <i class="home icon"></i> Home
+        </a>
+        <div class="ui simple dropdown item">
+            Usuarios
+            <i class="dropdown icon"></i>
+            <div class="menu">
+                <a class="item"><i class="list icon"></i> Listado</a>
+                <a class="item"><i class="plus icon"></i> Agregar usuario</a>
+            </div>
+        </div>
+        <div class="ui simple dropdown right item">
+            <%- user.first_name %>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+                <a class="item"><i class="edit icon"></i> Mi perfil</a>
+                <a class="item"><i class="power off icon"></i> Cerrar sesión</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -34,11 +34,9 @@ function submitForm(fields) {
     dataType: "json",
     data: fields,
     success: res => {
-      // if (res.success && res.results) {
-        // sessionStorage.setItem("Token", res.response.access_token);
+      if (res.success && res.results) {
         window.location.href = "/";
-        // res.setRequestHeader ("Authorization", `Bearer ${res.response.access_token}`)
-      // }
+      }
     },
     error: err => {
       let res = err.responseJSON;

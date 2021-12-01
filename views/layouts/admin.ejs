@@ -1,19 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-        <title><%= title %></title>
-        <script src="assets/js/jquery.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
-        <link rel="stylesheet" type="text/css" href="assets/css/main.css">
-    </head>
-    <body>
-        <div class="wrapper">
-            <main><%- body %></main>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>
+        <% (!title)  ? 'Inicio' : title%></title>
+    <script src="assets/js/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+</head>
+
+
+<body>
+
+    <main>
+        <%- include('../partials/header.ejs') %>
+        <div class="ui container">
+            <%- body %>
         </div>
-        <script src="assets/js/semantic.min.js"></script>
-        <script src="assets/js/login.js"></script>
-    </body>
+        <%- include('../partials/footer.ejs') %>
+    </main>
+
+
+    <script src="assets/js/semantic.min.js"></script>
+    <script src="assets/js/login.js"></script>
+</body>
+
+
 </html>

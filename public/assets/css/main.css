@@ -1,11 +1,11 @@
-body {
+.body {
   background-color: #dadada;
 }
 body > .grid {
   height: 100%;
 }
-.wrapper{
-  padding-top: 70px; 
+.wrapper {
+  padding-top: 70px;
 }
 .image {
   margin-top: -100px;
@@ -22,4 +22,12 @@ body > .grid {
 
 .swal-footer {
   text-align: center !important;
+}
+
+@media (min-height: 320px) {
+  .ui.footer.form-page {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
 }

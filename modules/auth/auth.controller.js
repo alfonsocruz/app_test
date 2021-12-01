@@ -10,28 +10,36 @@ class AuthController {
     try {
       const validationResult = validations.signInValidation(req.body);
       if (!validationResult.success) return next(validationResult.error);
-      
-      passport.authenticate('login', async (err, user, info) => {
-        try{
+
+      passport.authenticate("login", async (err, user, info) => {
+        try {
           if (err || !user) {
             return next(
               response.errorResponse({
                 code: 500,
-                message: "",
+                message: info.message,
                 errors: err
               })
             );
           }
-          if (!user) { return res.redirect('/login'); }
-          
-          req.login(user, { session: false }, async (err) => {
-            if (err) return next(err)
-            const token = JWTClass.respondWithToken(user);
-            return res.json({ token })
-          })
+          if (!user) {
+            return res.redirect("/login");
+          }
 
-        }catch(err){
-          console.log("Error => ", err)
+          req.login(user, { session: true }, async err => {
+            if (err) return next(err);
+
+            const token = JWTClass.respondWithToken(user);
+            user.token = token;
+            res.cookie("token", token);
+            return res.json(
+              response.successResponse({
+                message: `¡Bienvenido ${user.Nombre}!`,
+                response: user
+              })
+            );
+          });
+        } catch (err) {
           next(
             response.errorResponse({
               code: 500,
@@ -41,7 +49,7 @@ class AuthController {
             })
           );
         }
-      })(req, res, next)
+      })(req, res, next);
     } catch (err) {
       next(
         response.errorResponse({
@@ -60,8 +68,23 @@ class AuthController {
       const validationResult = validations.signUpValidation(body);
       if (!validationResult.success) return next(validationResult.error);
 
-      let queryResults = await users.create(body);
-      res.json(queryResults);
+      let result = await users.create(body);
+      if (!result.success) {
+        return next(
+          response.errorResponse({
+            code: 500,
+            message: "Ocurrió un error, contacte al administrador",
+            errors: "No se obtuvo respuesta por parte del servidor"
+          })
+        );
+      }
+
+      return res.json(
+        response.successResponse({
+          message: "Usuario creado con éxito",
+          response: result.data
+        })
+      );
     } catch (err) {
       next(
         response.errorResponse({

@@ -1,6 +1,5 @@
 const express = require("express");
 const auth = require("../middlewares/ProtectedWebRoute");
-const passport = require("passport");
 const router = express.Router();
 
 router.get("/login", (req, res) => {
@@ -15,16 +14,8 @@ router.get("/", [auth], (req, res) => {
   res.render("index", { title: "Inicio" });
 });
 
-router.get(
-  "/profile",
-  passport.authenticate("jwt", { session: false }),
-  (req, res, next) => {
-    res.json({
-      message: "You did it!",
-      user: req.user,
-      token: req.query.token
-    });
-  }
-);
+router.get("/admin", [auth], (req, res) => {
+  res.render("index", { title: "Inicio" });
+});
 
 module.exports = router;

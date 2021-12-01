@@ -74,7 +74,7 @@ function submitForm(fields) {
     data: fields,
     success: response => {
       if (response.success && response.results) {
-        window.location.href = "registro";
+        window.location.href = "login";
       }
     },
     error: err => {

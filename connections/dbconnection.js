@@ -9,14 +9,12 @@ class DBConnection {
         pool.getConnection(function(err, connection) {
           if (err) throw err;
 
-          connection.query(query, parameters, function (error, results, fields) {
-
+          connection.query(query, parameters, function(error, results, fields) {
             connection.release();
-         
-            if (error) throw error;
-            
-            resolve(JSON.parse(JSON.stringify(results)));
 
+            if (error) throw error;
+
+            resolve(JSON.parse(JSON.stringify(results)));
           });
         });
       });
@@ -40,6 +38,7 @@ class DBConnection {
       try {
         let result = [];
         pool.getConnection(function(err, connection) {
+          console.log(err);
           connection.beginTransaction(function(err) {
             if (err) {
               console.log("Error 1: Transaction =>", err);
@@ -70,7 +69,7 @@ class DBConnection {
                   }
                 });
               }
-  
+
               connection.commit(function(err) {
                 if (err) {
                   connection.rollback(function() {

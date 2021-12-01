@@ -1,30 +1,35 @@
 const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
 
-const JWTStrategy = require("passport-jwt").Strategy;
-const ExtractJWT = require("passport-jwt").ExtractJwt;
-
 const mysql = require("../users/users.mysql");
 const JWTClass = require("../../helpers/jwt");
-
 
 const authenticateUser = async (email, password, done) => {
   try {
     let queryResults = await mysql.findOne({ email: email });
 
     if (!queryResults.results) {
-      return done(null, false, { message: "No se encontró una cuenta de usuario con las credenciales proporcionadas." });
+      return done(null, false, {
+        message:
+          "No se encontró una cuenta de usuario con las credenciales proporcionadas."
+      });
     }
-    const user  = queryResults.data;
-    const isValidPassword = await JWTClass.checkPassword(password, user.password);
-    
+    const user = queryResults.data;
+    const isValidPassword = await JWTClass.checkPassword(
+      password,
+      user.password
+    );
+
     if (!isValidPassword) {
-      return done(null, false, { message: "La contraseña no coincide, intente de nuevo." })
+      return done(null, false, {
+        message: "La contraseña no coincide, intente de nuevo."
+      });
     }
-    
-    return done(null, user, { message: 'Login successfull' })
+
+    delete user.password;
+    return done(null, user, { message: "Login successfull" });
   } catch (e) {
-    return done(e)
+    return done(e);
   }
 };
 
@@ -36,30 +41,20 @@ passport.use(
   )
 );
 
-passport.use(new JWTStrategy({
-    secretOrKey: process.env.JWT_KEY,
-    jwtFromRequest: ExtractJWT.fromUrlQueryParameter('token')
-}, async (token, done) => {
-    try {
-        return done(null, token)
-    } catch (e) {
-        done(error)
+passport.serializeUser((user, done) => {
+  done(null, user.admin_id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    let queryResults = await mysql.findOne({ id: id });
+    if (queryResults.success && queryResults.results) {
+      const user = queryResults.data;
+      done(null, user);
     }
-}));
-
-// passport.serializeUser(function(user, done) {
-//   done(null, user.id);
-// });
-
-// passport.deserializeUser(function(id, done) {
-//   let queryResults = mysql.findOne({ email: email });
-//   // User.findById(id, function (err, user) {
-//   //   done(err, user);
-//   // });
-//   if(!queryResults.results)
-//     done(null, false)
-
-//   done(null, queryResults.data);
-// });
+  } catch (e) {
+    done(e);
+  }
+});
 
 module.exports = passport;
