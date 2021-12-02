@@ -79,7 +79,7 @@ function submitForm(fields) {
     },
     error: err => {
       let res = err.responseJSON;
-      swal({ title: res.message, icon: "error" });
+      swal({ title: res.message, icon: "warning" });
     }
   });
 }

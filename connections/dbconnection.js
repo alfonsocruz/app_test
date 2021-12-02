@@ -14,7 +14,11 @@ class DBConnection {
 
             if (error) throw error;
 
-            resolve(JSON.parse(JSON.stringify(results)));
+            // resolve(JSON.parse(JSON.stringify(results)));
+            resolve({
+              success: true,
+              data: JSON.parse(JSON.stringify(results))
+            });
           });
         });
       });
@@ -30,6 +34,25 @@ class DBConnection {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  executeQuery(connection, query, parameters) {
+    return new Promise((resolve, reject) => {
+      try {
+        connection.query(query, parameters, function(error, results, fields) {
+          if (error) {
+            reject({ success: false, error });
+          } else {
+            resolve({
+              success: true,
+              data: JSON.parse(JSON.stringify(results))
+            });
+          }
+        });
+      } catch (error) {
+        reject({ success: false, error });
+      }
+    });
   }
 
   executeTransaction(elements) {

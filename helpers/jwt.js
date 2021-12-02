@@ -5,7 +5,7 @@ class JWTClass {
   respondWithToken(user) {
     const TOKEN_WEB = process.env.TOKEN_WEB;
     const payload = user;
-    const token = jwt.sign(payload, process.env.JWT_KEY, {
+    const token = jwt.sign(payload, key.key, {
       expiresIn: TOKEN_WEB
     });
     return token;

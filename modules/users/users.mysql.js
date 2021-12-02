@@ -18,28 +18,43 @@ class UserMySql {
     return formatQueryResponse(res, "FIRST", "mysql");
   }
 
-  async getMenusUser({ idUser, type }) {
+  async signUp(connection, body) {
     try {
-      var query = queries.getMenus;
-      let res = await mysqlcon.getConnectionWithData(query, [idUser, type]);
-      return formatQueryResponse(res, "SELECT", "mysql");
+      const query = queries.create;
+      const params = [
+        body.admin_type,
+        body.first_name,
+        body.last_name,
+        body.email,
+        body.password,
+        body.date_created
+      ];
+      let res = await mysqlcon.executeQuery(connection, query, params);
+      return formatQueryResponse(res, "INSERT", "mysql");
     } catch (e) {
-      console.log(e);
+      return { success: false, error: e };
     }
   }
 
-  createTransaction(body) {
-    const query = queries.create;
-    const parameters = [
-      body.admin_type,
-      body.first_name,
-      body.last_name,
-      body.email,
-      body.password,
-      body.date_created
-    ];
+  async getAccess(id) {
+    try {
+      const query = queries.getAccess;
+      let res = await mysqlcon.getConnectionWithData(query, [id]);
+      return formatQueryResponse(res, "SELECT", "mysql");
+    } catch (e) {
+      return { success: false, error: e };
+    }
+  }
 
-    return { query, parameters };
+  async setAccess(connection, body) {
+    try {
+      const query = queries.setAccess;
+      const params = [body.admin_id, body.admin_granter, body.access_id];
+      let res = await mysqlcon.executeQuery(connection, query, params);
+      return formatQueryResponse(res, "INSERT", "mysql");
+    } catch (e) {
+      return { success: false, error: e };
+    }
   }
 }
 

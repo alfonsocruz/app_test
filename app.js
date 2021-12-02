@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 
-const jwt = require("jsonwebtoken");
 const helmet = require("helmet");
 const cors = require("cors");
 require("dotenv").config();
@@ -16,10 +15,10 @@ const webRoutes = require("./routes/web");
 app.set("key", keys.key);
 app.use(express.json({ limit: "50mb" }));
 
-app.use(cookieParse(process.env.JWT_KEY));
+app.use(cookieParse(keys.key));
 app.use(
   session({
-    secret: process.env.JWT_KEY,
+    secret: keys.key,
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -40,22 +39,8 @@ app.set("layout", __dirname + "/views/layouts/admin");
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((req, res, next) => {
-  const token = req.cookies.token;
-  let user = {};
-  jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
-    if (err) {
-      next();
-    } else {
-      user = decoded;
-    }
-  });
-  res.locals.user = user;
-  next();
-});
-
-app.use("/", webRoutes);
 app.use("/api", apiRoutes);
+app.use("/", webRoutes);
 
 /** 404 */
 app.use((req, res, next) => {

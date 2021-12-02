@@ -30,7 +30,7 @@ let rules = {
 function submitForm(fields) {
   $.ajax({
     type: "POST",
-    url: "/api/auth/sign-in",
+    url: "api/auth/sign-in",
     dataType: "json",
     data: fields,
     success: res => {

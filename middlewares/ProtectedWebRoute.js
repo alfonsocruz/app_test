@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const key = require("../settings/key");
 
-const webAuth = (req, res, next) => {
+const isAuthenticated = (req, res, next) => {
   try {
     if (!req.cookies.token) {
       res.redirect("login");
@@ -20,4 +20,4 @@ const webAuth = (req, res, next) => {
   }
 };
 
-module.exports = webAuth;
+module.exports = isAuthenticated;

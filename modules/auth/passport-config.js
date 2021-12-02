@@ -14,7 +14,7 @@ const authenticateUser = async (email, password, done) => {
           "No se encontró una cuenta de usuario con las credenciales proporcionadas."
       });
     }
-    const user = queryResults.data;
+    let user = queryResults.data;
     const isValidPassword = await JWTClass.checkPassword(
       password,
       user.password
@@ -27,6 +27,8 @@ const authenticateUser = async (email, password, done) => {
     }
 
     delete user.password;
+    const menusResults = await mysql.getAccess(user.admin_id);
+    user.menus = menusResults.results ? menusResults.data : [];
     return done(null, user, { message: "Login successfull" });
   } catch (e) {
     return done(e);
@@ -49,7 +51,9 @@ passport.deserializeUser(async (id, done) => {
   try {
     let queryResults = await mysql.findOne({ id: id });
     if (queryResults.success && queryResults.results) {
-      const user = queryResults.data;
+      let user = queryResults.data;
+      const menusResults = await mysql.getAccess(user.admin_id);
+      user.menus = menusResults.results ? menusResults.data : [];
       done(null, user);
     }
   } catch (e) {

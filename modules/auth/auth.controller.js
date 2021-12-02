@@ -1,6 +1,5 @@
 const passport = require("passport");
 const JWTClass = require("../../helpers/jwt");
-// const mysql = require("../users/users.mysql");
 const response = require("../../helpers/response");
 const validations = require("./auth.validations");
 const users = require("../users/users.model");
@@ -23,7 +22,13 @@ class AuthController {
             );
           }
           if (!user) {
-            return res.redirect("/login");
+            return next(
+              response.errorResponse({
+                code: 500,
+                message: info.message,
+                errors: err
+              })
+            );
           }
 
           req.login(user, { session: true }, async err => {
@@ -31,7 +36,9 @@ class AuthController {
 
             const token = JWTClass.respondWithToken(user);
             user.token = token;
+
             res.cookie("token", token);
+
             return res.json(
               response.successResponse({
                 message: `¡Bienvenido ${user.Nombre}!`,
@@ -64,16 +71,17 @@ class AuthController {
 
   async signUp(req, res, next) {
     try {
-      const { body, user } = req;
+      const { body } = req;
       const validationResult = validations.signUpValidation(body);
       if (!validationResult.success) return next(validationResult.error);
 
-      let result = await users.create(body);
+      let result = await users.signUp(body);
+
       if (!result.success) {
         return next(
           response.errorResponse({
             code: 500,
-            message: "Ocurrió un error, contacte al administrador",
+            message: result.error,
             errors: "No se obtuvo respuesta por parte del servidor"
           })
         );
@@ -98,11 +106,25 @@ class AuthController {
   }
 
   async logout(req, res) {
-    return res.json("API PARA PROGRAMAR EL LOGOUT");
-  }
-
-  async refreshToken(req, res) {
-    return res.json("API PARA REFRESCAR EL TOKEN");
+    try {
+      req.logout();
+      res.clearCookie("token");
+      res.json(
+        response.successResponse({
+          message: "Sesión terminada con éxito",
+          response: {}
+        })
+      );
+    } catch (err) {
+      next(
+        response.errorResponse({
+          code: 500,
+          message:
+            "Hubo un error, intente de nuevo. Si el error persiste contacte al administrador.",
+          errors: err
+        })
+      );
+    }
   }
 }
 

@@ -2,7 +2,8 @@ const jwt = require("jsonwebtoken");
 const key = require("../settings/key");
 const verifyToken = (req, res, next) => {
   try {
-    const isLoggedIn = req.body.token || req.query.token || req.headers["authorization"];
+    const isLoggedIn =
+      req.body.token || req.query.token || req.headers["authorization"];
     if (!isLoggedIn) {
       next({
         code: 401,
